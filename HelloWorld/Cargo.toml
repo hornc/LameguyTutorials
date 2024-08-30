@@ -1,0 +1,12 @@
+[package]
+name = "HelloWorld"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+psx = { git = "https://github.com/hornc/psx-sdk-rs.git", features = ["EU_region"] }
+
+[features]
+loadable_exe = []
