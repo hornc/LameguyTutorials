@@ -1,0 +1,10 @@
+[package]
+name = "Textures"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+psx = { git = "https://github.com/ayrtonm/psx-sdk-rs.git" }
+
+[features]
+loadable_exe = []
