@@ -12,11 +12,23 @@ use psx::{dma, Framebuffer};
 // http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html
 // Builds on the Yellow Square example, but loads a TIM and textures a second primitive.
 
+
+const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+
+
 #[no_mangle]
 fn main() {
     // Init graphics and stuff
-    let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(INDIGO)).unwrap();
-    //let mut fb = Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(INDIGO)).unwrap();
+    let mut fb = if NTSC {
+        Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(INDIGO)).unwrap()
+    } else {   // PAL
+        Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
+    };
+    let texture_tim = if NTSC {
+        include_tim!("../texture64_320x240-NTSC.tim")
+    } else {
+        include_tim!("../texture64_320x256-PAL.tim")
+    };
 
     let mut gpu_dma = dma::GPU::new();
 
@@ -31,7 +43,6 @@ fn main() {
     link_list(&mut ot[0..8]);
     link_list(&mut ot[8..16]);
 
-    let texture_tim = include_tim!("../texture64.tim");
     let loaded_tim = fb.load_tim(texture_tim);  // contains the TexPage and CLUT (if any)
 
     // Location and Dimensions of the square
