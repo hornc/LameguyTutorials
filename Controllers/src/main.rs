@@ -7,11 +7,12 @@ use psx::gpu::primitives::{PolyF4, PolyFT4};
 use psx::gpu::{Color, link_list, Packet, TexCoord, Vertex, VideoMode};
 use psx::hw::gpu::GP0Command;
 use psx::{dma, Framebuffer};
+use psx::sys::gamepad::{Gamepad, Button};
 
 
 // Following the GCC based PsyQ SDK / PSn00bSDK tutorial at:
-// http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html
-// Builds on the Yellow Square example, but loads a TIM and textures a second primitive.
+// http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html
+// Builds on the Textures example, and uses the controller to move the textured square.
 
 
 const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
@@ -74,12 +75,26 @@ fn main() {
     let (x, y) = (32, 32);
     let (h, w) = (64, 64);
     // Location of the sprite
-    let (sx, sy) = (48, 48);
+    let (mut sx, mut sy) = (48, 48);
     // Texture coordinates for the sprite
     let tex_coords = [(0, 0), (0, 64), (64, 0), (64, 64)].map(|(x, y)| TexCoord { x, y });
 
+    let mut gamepad = Gamepad::new();
+
     // Main loop
     loop {
+        let mut gp = gamepad.poll_p1();
+        if gp.pressed(Button::Right) {
+            sx += 1;
+        } else if gp.pressed(Button::Left) {
+            sx -= 1;
+        }
+        if gp.pressed(Button::Up) {
+            sy -= 1;
+        } else if gp.pressed(Button::Down) {
+            sy += 1;
+        }
+
         let (a, b) = ot.split_at_mut(8);
         let (display, draw) = if db == 1 { (a, b) } else { (b, a) };
         gpu_dma.send_list_and(display, || {
