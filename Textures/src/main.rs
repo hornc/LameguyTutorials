@@ -3,8 +3,9 @@
 
 use psx::constants::*;
 use psx::include_tim;
-use psx::gpu::primitives::{PolyFT4};
+use psx::gpu::primitives::{PolyF4, PolyFT4};
 use psx::gpu::{Color, link_list, Packet, TexCoord, Vertex, VideoMode};
+use psx::hw::gpu::GP0Command;
 use psx::{dma, Framebuffer};
 
 
@@ -14,6 +15,31 @@ use psx::{dma, Framebuffer};
 
 
 const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+
+
+#[repr(C)]
+union PolyF {
+    flat: PolyF4,
+    text: PolyFT4,
+}
+
+
+pub trait SafeUnionAccess {
+    fn as_flat(&mut self) -> &mut PolyF4;
+    fn as_text(&mut self) -> &mut PolyFT4;
+}
+impl SafeUnionAccess for Packet<PolyF> { // taken from ayrtonm/psx-sdk-rs/tree/main/examples/monkey/src/main.rs
+    fn as_flat(&mut self) -> &mut PolyF4 {
+        // SAFETY: We resize the packet to hold a PolyF4 and reset the polygon's command
+        // to ensure that the union's PolyF4 is in a valid state when we access it
+        unsafe { self.resize::<PolyF4>().contents.flat.reset_cmd() }
+    }
+    fn as_text(&mut self) -> &mut PolyFT4 {
+        unsafe { self.resize::<PolyFT4>().contents.text.reset_cmd() }
+    }
+}
+
+impl GP0Command for PolyF {}
 
 
 #[no_mangle]
@@ -35,11 +61,10 @@ fn main() {
     let mut db = 0;  // display buffer 0 or 1
 
     // Set up 2 x ordering tables in a 2x8 array
-    // TODO: set up a primitive buffer as mentioned in the tutorial so we aren't stuck with
-    // an ordering table per primitive type...
-    let mut ot = [const { Packet::new(PolyFT4::new())}; 16];
-    
-    let ot = &mut ot;
+    // using the multi-primitive  approach suggested by psx-sdk-rs monkey example
+    // .. this is still not a primitive buffer tho
+    let mut ot = [const { Packet::new(PolyF { flat: PolyF4::new() }) }; 16];
+
     link_list(&mut ot[0..8]);
     link_list(&mut ot[8..16]);
 
@@ -60,16 +85,13 @@ fn main() {
         gpu_dma.send_list_and(display, || {
             draw[1]
                 // TODO: be clear about Vertex and TexCoord ordering!
-                //.contents.set_vertices([Vertex(sx, sy), Vertex(sx, sy+h), Vertex(sx+w, sy), Vertex(sx+w, sy+h)])
-                .contents.set_vertices([(sx, sy), (sx, sy+h), (sx+w, sy), (sx+w, sy+h)].map(|v| Vertex::new(v)))
-                //.set_color(Color::new(128, 128, 128))
+                .as_text().set_vertices([(sx, sy), (sx, sy+h), (sx+w, sy), (sx+w, sy+h)].map(|v| Vertex::new(v)))
                 .set_color(Color::new(255, 255, 255))
-                //.set_color(WHITE)
                 .set_tex_page(loaded_tim.tex_page)
                 .set_tex_coords(tex_coords)
                 .set_clut(loaded_tim.clut.unwrap());
-            draw[0]  // TODO: this should be a PolyF4 (without texture!)
-                .contents.set_vertices([Vertex(x, y), Vertex(x+w, y), Vertex(x, y+h), Vertex(x+w, y+h)])
+            draw[0]
+                .as_flat().set_vertices([Vertex(x, y), Vertex(x+w, y), Vertex(x, y+h), Vertex(x+w, y+h)])
                 .set_color(YELLOW);
         });
 
