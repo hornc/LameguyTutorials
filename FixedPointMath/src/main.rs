@@ -6,7 +6,7 @@ use psx::gpu::primitives::{PolyF3};
 use psx::gpu::{Color, link_list, Packet, TexCoord, Vertex, VideoMode};
 use psx::{dma, dprintln, Framebuffer};
 use psx::sys::gamepad::{Gamepad, Button};
-use psx::math::{f16};
+use psx::math::{f16, rotate_z, Rad};
 
 // Following the GCC based PsyQ SDK / PSn00bSDK tutorial at:
 // http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html
@@ -14,6 +14,8 @@ use psx::math::{f16};
 
 
 const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+
+const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
 
 
 #[no_mangle]
@@ -37,42 +39,46 @@ fn main() {
     link_list(&mut ot[0..8]);
     link_list(&mut ot[8..16]);
 
-    // Location and Dimensions of the player object 
-    let (x, y) = (32, 32);
-    let (h, w): (i16, i16) = (64, 64);
     // Location of the player 
-    //let (mut sx, mut sy) = (48, 48);
-    let mut sx = f16::from_int(127);
-    let mut sy = f16::from_int(127);
-    let mut angle = f16::from_int(0);
+    let mut pos_x = f16::from_int(60);
+    let mut pos_y = f16::from_int(60);
+    let mut angle = Rad(0);
 
     let mut gamepad = Gamepad::new();
 
+    let player_tri = [
+        [0, -20, 0],
+        [10, 20, 0],
+        [-10, 20, 0]
+    ].map(|v| v.map(|e| f16::from_int(e)));
+
     // Main loop
     loop {
-        let mut gp = gamepad.poll_p1();
+        let gp = gamepad.poll_p1();
         if gp.pressed(Button::Right) {
-            sx += f16::ONE;
+            angle += ANG;
         } else if gp.pressed(Button::Left) {
-            sx -= f16::ONE;
+            angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            sy -= f16::ONE;
+            pos_y -= f16::ONE;
         } else if gp.pressed(Button::Down) {
-            sy += f16::ONE;
+            pos_y += f16::ONE;
         }
 
         let (a, b) = ot.split_at_mut(8);
         let (display, draw) = if db == 1 { (a, b) } else { (b, a) };
         gpu_dma.send_list_and(display, || {
+            let rotated_tri =
+                player_tri.map(|v| rotate_z(v, angle));
             draw[0]
-                .contents.set_vertices([Vertex(x, y), Vertex(x+w, y), Vertex(x, y+h)])
+                .contents.set_vertices(rotated_tri.map(|[x,y,z]| Vertex((x + pos_x).to_int_lossy(), (y + pos_y).to_int_lossy())))
                 .set_color(YELLOW);
         });
 
-        // Display our fixed point values on screen:
-        dprintln!(txt, "POS_X={:#x?}", sx);
-        dprintln!(txt, "POS_Y={:#x?}", sy);
+        // Display fixed point f16, and Rad values on screen:
+        dprintln!(txt, "POS_X={:#x?} ({})", pos_x, pos_x.to_int_lossy());
+        dprintln!(txt, "POS_Y={:#x?} ({})", pos_y, pos_y.to_int_lossy());
         dprintln!(txt, "ANGLE={:#x?}", angle);
         txt.reset();
 
