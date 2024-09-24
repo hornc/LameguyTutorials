@@ -1,0 +1,11 @@
+[package]
+name = "FixedPointMath"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+#psx = { git = "https://github.com/ayrtonm/psx-sdk-rs.git" }
+psx = { path = "../../psx-sdk-rs/psx" }
+
+[features]
+loadable_exe = []
