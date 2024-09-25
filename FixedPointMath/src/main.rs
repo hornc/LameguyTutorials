@@ -6,7 +6,7 @@ use psx::gpu::primitives::{PolyF3};
 use psx::gpu::{Color, link_list, Packet, TexCoord, Vertex, VideoMode};
 use psx::{dma, dprintln, Framebuffer};
 use psx::sys::gamepad::{Gamepad, Button};
-use psx::math::{f16, rotate_z, Rad};
+use psx::math::{f16, rotate_z, Rad, sin, cos};
 
 // Following the GCC based PsyQ SDK / PSn00bSDK tutorial at:
 // http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html
@@ -16,6 +16,7 @@ use psx::math::{f16, rotate_z, Rad};
 const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
 
 const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
+const SPEED: i8 = 2;        // Movement speed multiplier
 const W: i16 = 320;
 const H: i16 = 240;
 
@@ -29,7 +30,7 @@ fn main() {
         Framebuffer::new((0, 0), (0, 256), (W, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
     };
 
-    let mut txt = fb.load_default_font().new_text_box((0, 8), (W, 224));
+    let mut txt = fb.load_default_font().new_text_box((0, 8), (W, 320));
     let mut gpu_dma = dma::GPU::new();
     let mut db = 0;  // display buffer 0 or 1
 
@@ -63,9 +64,11 @@ fn main() {
             angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            pos_x -= f16::ONE;
+            pos_x += sin(angle) * SPEED;
+            pos_y -= cos(angle) * SPEED;
         } else if gp.pressed(Button::Down) {
-            pos_x += f16::ONE;
+            pos_x -= sin(angle) * SPEED;
+            pos_y += cos(angle) * SPEED;
         }
 
         let (a, b) = ot.split_at_mut(8);
