@@ -16,18 +16,20 @@ use psx::math::{f16, rotate_z, Rad};
 const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
 
 const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
+const W: i16 = 320;
+const H: i16 = 240;
 
 
 #[no_mangle]
 fn main() {
     // Init graphics and stuff
     let mut fb = if NTSC {
-        Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(INDIGO)).unwrap()
+        Framebuffer::new((0, 0), (0, H), (W, H), VideoMode::NTSC, Some(INDIGO)).unwrap()
     } else {   // PAL
-        Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
+        Framebuffer::new((0, 0), (0, 256), (W, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
     };
 
-    let mut txt = fb.load_default_font().new_text_box((100, 8), (320, 224));
+    let mut txt = fb.load_default_font().new_text_box((0, 8), (W, 224));
     let mut gpu_dma = dma::GPU::new();
     let mut db = 0;  // display buffer 0 or 1
 
@@ -40,8 +42,8 @@ fn main() {
     link_list(&mut ot[8..16]);
 
     // Location of the player 
-    let mut pos_x = f16::from_int(60);
-    let mut pos_y = f16::from_int(60);
+    let mut pos_x = f16::from_int(0);
+    let mut pos_y = f16::from_int(0);
     let mut angle = Rad(0);
 
     let mut gamepad = Gamepad::new();
@@ -61,9 +63,9 @@ fn main() {
             angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            pos_y -= f16::ONE;
+            pos_x -= f16::ONE;
         } else if gp.pressed(Button::Down) {
-            pos_y += f16::ONE;
+            pos_x += f16::ONE;
         }
 
         let (a, b) = ot.split_at_mut(8);
@@ -72,7 +74,7 @@ fn main() {
             let rotated_tri =
                 player_tri.map(|v| rotate_z(v, angle));
             draw[0]
-                .contents.set_vertices(rotated_tri.map(|[x,y,z]| Vertex((x + pos_x).to_int_lossy(), (y + pos_y).to_int_lossy())))
+                .contents.set_vertices(rotated_tri.map(|[x,y,z]| Vertex((x + pos_x).to_int_lossy() + W / 2, (y + pos_y).to_int_lossy() + H / 2)))
                 .set_color(YELLOW);
         });
 
