@@ -81,7 +81,7 @@ fn main() {
                 .set_color(YELLOW);
         });
 
-        // Display fixed point f16, and Rad values on screen:
+        // Display fixed point f16, and Radian values
         dprintln!(txt, "POS_X={:#x?} ({})", pos_x, pos_x.to_int_lossy());
         dprintln!(txt, "POS_Y={:#x?} ({})", pos_y, pos_y.to_int_lossy());
         dprintln!(txt, "ANGLE={:#x?}", angle);
