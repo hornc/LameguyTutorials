@@ -13,8 +13,16 @@ use psx::{dma, Framebuffer};
 #[no_mangle]
 fn main() {
     // Init graphics and stuff
-    let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(INDIGO)).unwrap();
-    //let mut fb = Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(INDIGO)).unwrap();
+    //const sx: i16 = 320;
+    const sx: i16 = 320;
+    //const sy: i16 = 240;
+    const sy: i16 = 256;
+    //let mut fb = Framebuffer::new((0, 0), (0, sy), (sx, sy), VideoMode::NTSC, Some(INDIGO)).unwrap();
+    //let mut fb = Framebuffer::new((0, 0), (0, sy), (sx, sy), VideoMode::PAL, Some(INDIGO)).unwrap();
+
+    // Interlaced, side-by-side buffers
+    //let mut fb = Framebuffer::new((0, 0), (sx, 0), (sx, sy), VideoMode::NTSC, Some(INDIGO)).unwrap();
+    let mut fb = Framebuffer::new((0, 0), (sx, 0), (sx, sy), VideoMode::PAL, Some(INDIGO)).unwrap();
 
     let mut gpu_dma = dma::GPU::new();
 
@@ -28,8 +36,11 @@ fn main() {
     link_list(&mut ot[8..16]);
 
     // Location and Dimensions of the square
-    let (x, y) = (32, 32);
-    let (h, w) = (64, 64);
+    let (x, y) = (1, 1);
+    let (h, w) = (sy-1, sx-1);
+    //let (h, w) = (sy - 20, sx - 2);
+    //let (h, w) =  (sy - 2, 364);
+    //let (h, w) =  (sy - 2, 203);
 
 
     // Main loop
@@ -40,6 +51,9 @@ fn main() {
             draw[0]
                 .contents.set_vertices([Vertex(x, y), Vertex(x+w, y), Vertex(x, y+h), Vertex(x+w, y+h)])
                 .set_color(YELLOW);
+            draw[1]
+                .contents.set_vertices([Vertex(x+1, y+1), Vertex(x+w-1, y+1), Vertex(x+1, y+h-1), Vertex(x+w-1, y+h-1)])
+                .set_color(BLUE);
         });
 
         // Wait for GPU to finish drawing and V-Blank
