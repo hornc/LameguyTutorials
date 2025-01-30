@@ -9,11 +9,11 @@ https://github.com/ayrtonm/psx-sdk-rs
 In the 4 to 6 months since I started this learning / conversion project (mid-2024 to early 2025), the original tutorials have sadly dropped off the web :(
 I am now linking to the archived pages at the [Internet Archive's Wayback Machine](https://web.archive.org/).
 
-* [1.1](https://web.archive.org/web/20240822185308/http://lameguy64.net/tutorials/pstutorials/chapter1/1-display.html) Setting up Graphics and [Hello World](./HelloWorld/)
-* [1.2](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/2-graphics.html) Drawing Graphics Primitives [Yellow Square](./YellowSquare/)
-* [1.3](https://web.archive.org/web/20240916202224/http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html) Textures, TPages and CLUTs [Textures](./Textures/)
-* [1.4](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html) Initializing / Parsing Controller Data [Controllers](./Controllers/)
-* [1.5](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html) Rotating and moving polys using [Fixed Point Math](./FixedPointMath)
+* [1.1](https://web.archive.org/web/20240822185308/http://lameguy64.net/tutorials/pstutorials/chapter1/1-display.html) Setting up Graphics and [Hello World](./1.1_HelloWorld/)
+* [1.2](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/2-graphics.html) Drawing Graphics Primitives [Yellow Square](./1.2_YellowSquare/)
+* [1.3](https://web.archive.org/web/20240916202224/http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html) Textures, TPages and CLUTs [Textures](./1.3_Textures/)
+* [1.4](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html) Initializing / Parsing Controller Data [Controllers](./1.4_Controllers/)
+* [1.5](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html) Rotating and moving polys using [Fixed Point Math](./1.5_FixedPointMath)
 * [1.6](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html) Using the CD-ROM
 
 ## To run the examples:
