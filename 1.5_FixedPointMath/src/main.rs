@@ -13,7 +13,7 @@ use psx::math::{f16, rotate_z, Rad, sin, cos};
 // Builds on the Controllers example ....
 
 
-const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+const NTSC: bool = true;  // toggle between NTSC and PAL modes and texture
 
 const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
 const SPEED: i8 = 2;        // Movement speed multiplier

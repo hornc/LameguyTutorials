@@ -15,7 +15,7 @@ use psx::sys::gamepad::{Gamepad, Button};
 // Builds on the Textures example, and uses the controller to move the textured square.
 
 
-const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+const NTSC: bool = true;  // toggle between NTSC and PAL modes and texture
 
 
 #[repr(C)]
@@ -52,9 +52,9 @@ fn main() {
         Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
     };
     let texture_tim = if NTSC {
-        include_tim!("../../Textures/texture64_320x240-NTSC.tim")
+        include_tim!("../../1.3_Textures/texture64_320x240-NTSC.tim")
     } else {
-        include_tim!("../../Textures/texture64_320x256-PAL.tim")
+        include_tim!("../../1.3_Textures/texture64_320x256-PAL.tim")
     };
 
     let mut gpu_dma = dma::GPU::new();

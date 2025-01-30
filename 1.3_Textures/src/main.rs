@@ -14,7 +14,7 @@ use psx::{dma, Framebuffer};
 // Builds on the Yellow Square example, but loads a TIM and textures a second primitive.
 
 
-const NTSC: bool = false;  // toggle between NTSC and PAL modes and texture
+const NTSC: bool = true;  // toggle between NTSC and PAL modes and texture
 
 
 #[repr(C)]

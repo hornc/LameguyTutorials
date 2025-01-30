@@ -21,7 +21,7 @@ I am now linking to the archived pages at the [Internet Archive's Wayback Machin
 2. Install [Mednafen](https://mednafen.github.io/) (Playstation and other console runner / emulator) for your system. You will need to follow the [PSX BIOS instructions](https://mednafen.github.io/documentation/psx.html), this may be slightly complicated, but if you are doing PSX dev / emulation, you'll need to figure this out and obtain appropraite BIOS for the systems you need to emulate.
 3. Run a tutorial example from this repo, e.g.:
 ```
-cd HelloWorld
+cd 1.1_HelloWorld
 cargo psx run
 ```
 
