@@ -14,19 +14,23 @@ use psx::{dma, dprintln, Framebuffer};
 fn main() {
 
     // Init graphics and stuff
-    let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(Color::new(63, 0, 127))).unwrap();
+    // let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(Color::new(63, 0, 127))).unwrap();
+    const x: i16 = 320;
+    const y: i16 = 240;
+    let mut fb = Framebuffer::new((0, 0), (0, y), (x, y), VideoMode::NTSC, Some(Color::new(63, 0, 127))).unwrap();
     // The suggested PAL resolution produces an InvalidY error. TODO: Investigate what are the
     // correct PAL resolutions to use.
     //let mut fb = Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(Color::new(63, 0, 127))).unwrap();
+    //let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::PAL, Some(Color::new(63, 0, 127))).unwrap();
 
-    let mut txt = fb.load_default_font().new_text_box((0, 8), (320, 224));
+    //let mut txt = fb.load_default_font().new_text_box((0, 8), (320, 224));
 
     let mut gpu_dma = dma::GPU::new();
 
     // Main loop
     loop {
-        dprintln!(txt, "HELLO, WORLD!");
-        txt.reset();
+        //dprintln!(txt, "HELLO, WORLD!");
+        //txt.reset();
 
         // Wait for GPU to finish drawing and V-Blank
         fb.draw_sync();
