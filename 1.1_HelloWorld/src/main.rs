@@ -15,8 +15,6 @@ fn main() {
 
     // Init graphics and stuff
     let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(Color::new(63, 0, 127))).unwrap();
-    // The suggested PAL resolution produces an InvalidY error. TODO: Investigate what are the
-    // correct PAL resolutions to use.
     //let mut fb = Framebuffer::new((0, 0), (0, 256), (320, 256), VideoMode::PAL, Some(Color::new(63, 0, 127))).unwrap();
 
     let mut txt = fb.load_default_font().new_text_box((0, 8), (320, 224));
