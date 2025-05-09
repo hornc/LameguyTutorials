@@ -30,7 +30,7 @@ fn main() {
         Framebuffer::new((0, 0), (0, 256), (W, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
     };
 
-    let mut txt = fb.load_default_font().new_text_box((0, 8), (W, 320));
+    let mut txt = fb.load_default_font().new_text_box((0, 8), (W, H));
     let mut gpu_dma = dma::GPU::new();
     let mut db = 0;  // display buffer 0 or 1
 
