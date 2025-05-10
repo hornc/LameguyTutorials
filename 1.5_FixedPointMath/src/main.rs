@@ -19,6 +19,8 @@ const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
 const SPEED: i8 = 2;        // Movement speed multiplier
 const W: i16 = 320;
 const H: i16 = 240;
+const X_WRAP: i8 = 107;
+const Y_WRAP: i8 = 80;
 
 
 #[no_mangle]
@@ -50,9 +52,9 @@ fn main() {
     let mut gamepad = Gamepad::new();
 
     let player_tri = [
-        [0, -20, 0],
-        [10, 20, 0],
-        [-10, 20, 0]
+        [0, -10, 0],
+        [5, 10, 0],
+        [-5, 10, 0]
     ].map(|v| v.map(|e| f16::from_int(e)));
 
     // Main loop
@@ -70,6 +72,18 @@ fn main() {
             pos_x -= sin(angle) * SPEED;
             pos_y += cos(angle) * SPEED;
         }
+        // wrap player pos
+        if pos_x.to_int_lossy() > X_WRAP as i16 {
+            pos_x = pos_x.fract() + f16::from_int(-X_WRAP);
+        } else if pos_x.to_int_lossy() < -X_WRAP as i16 {
+            pos_x = pos_x.fract() + f16::from_int(X_WRAP);
+        }
+
+        if pos_y.to_int_lossy() > Y_WRAP as i16 {
+            pos_y = pos_x.fract() + f16::from_int(-Y_WRAP);
+        } else if pos_y.to_int_lossy() < -Y_WRAP as i16 {
+            pos_y = pos_y.fract() + f16::from_int(Y_WRAP);
+        }
 
         let (a, b) = ot.split_at_mut(8);
         let (display, draw) = if db == 1 { (a, b) } else { (b, a) };
@@ -77,7 +91,7 @@ fn main() {
             let rotated_tri =
                 player_tri.map(|v| rotate_z(v, angle));
             draw[0]
-                .contents.set_vertices(rotated_tri.map(|[x,y,z]| Vertex((x + pos_x).to_int_lossy() + W / 2, (y + pos_y).to_int_lossy() + H / 2)))
+                .contents.set_vertices(rotated_tri.map(|[x,y,z]| Vertex((x + pos_x).to_int_lossy() * 3 / 2 + W / 2, (y + pos_y).to_int_lossy() * 3 / 2 + H / 2)))
                 .set_color(YELLOW);
         });
 
