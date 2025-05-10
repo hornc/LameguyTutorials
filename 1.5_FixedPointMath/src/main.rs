@@ -82,9 +82,9 @@ fn main() {
         });
 
         // Display fixed point f16, and Radian values
-        dprintln!(txt, "POS_X={:#x?} ({})", pos_x, pos_x.to_int_lossy());
-        dprintln!(txt, "POS_Y={:#x?} ({})", pos_y, pos_y.to_int_lossy());
-        dprintln!(txt, "ANGLE={:#x?}", angle);
+        dprintln!(txt, "POS_X={:#06x} ({}.{:04})", pos_x.0, pos_x.to_int_lossy(), pos_x.fract().0 * 39);
+        dprintln!(txt, "POS_Y={:#06x} ({}.{:04})", pos_y.0, pos_y.to_int_lossy(), pos_y.fract().0 * 39);
+        dprintln!(txt, "ANGLE={}", angle.0 as i16);
         txt.reset();
 
         // Wait for GPU to finish drawing and V-Blank
