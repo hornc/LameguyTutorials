@@ -47,6 +47,8 @@ fn main() {
     // Location of the player 
     let mut pos_x = f16::from_int(0);
     let mut pos_y = f16::from_int(0);
+    let mut vel_x = f16::from_int(0);
+    let mut vel_y = f16::from_int(0);
     let mut angle = Rad(0);
 
     let mut gamepad = Gamepad::new();
@@ -66,21 +68,30 @@ fn main() {
             angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            pos_x += sin(angle) * SPEED;
-            pos_y -= cos(angle) * SPEED;
+            //pos_x += sin(angle) * SPEED;
+            //pos_y -= cos(angle) * SPEED;
+            vel_x += sin(angle) / 8;
+            vel_y -= cos(angle) / 8;
         } else if gp.pressed(Button::Down) {
-            pos_x -= sin(angle) * SPEED;
-            pos_y += cos(angle) * SPEED;
+            //pos_x -= sin(angle) * SPEED;
+            //pos_y += cos(angle) * SPEED;
+            vel_x -= sin(angle) / 8;
+            vel_y += cos(angle) / 8;
         }
-        // wrap player pos
+
+        // Accumulate player coordinates by velocity
+        pos_x += vel_x;
+        pos_y += vel_y;
+
+        // Wrap player coordinates
         if pos_x.to_int_lossy() > X_WRAP as i16 {
-            pos_x = pos_x.fract() + f16::from_int(-X_WRAP);
+            pos_x = pos_x.fract() - f16::from_int(X_WRAP);
         } else if pos_x.to_int_lossy() < -X_WRAP as i16 {
             pos_x = pos_x.fract() + f16::from_int(X_WRAP);
         }
 
         if pos_y.to_int_lossy() > Y_WRAP as i16 {
-            pos_y = pos_x.fract() + f16::from_int(-Y_WRAP);
+            pos_y = pos_y.fract() - f16::from_int(Y_WRAP);
         } else if pos_y.to_int_lossy() < -Y_WRAP as i16 {
             pos_y = pos_y.fract() + f16::from_int(Y_WRAP);
         }
@@ -98,7 +109,10 @@ fn main() {
         // Display fixed point f16, and Radian values
         dprintln!(txt, "POS_X={:#06x} ({}.{:04})", pos_x.0, pos_x.to_int_lossy(), pos_x.fract().0 * 39);
         dprintln!(txt, "POS_Y={:#06x} ({}.{:04})", pos_y.0, pos_y.to_int_lossy(), pos_y.fract().0 * 39);
+        dprintln!(txt, "VEL_X={:#06x} ({}.{:04})", vel_x.0, vel_x.to_int_lossy(), vel_x.fract().0 * 39);
+        dprintln!(txt, "VEL_Y={:#06x} ({}.{:04})", vel_y.0, vel_y.to_int_lossy(), vel_y.fract().0 * 39);
         dprintln!(txt, "ANGLE={}", angle.0 as i16);
+
         txt.reset();
 
         // Wait for GPU to finish drawing and V-Blank
