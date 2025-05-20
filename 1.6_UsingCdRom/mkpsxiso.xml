@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iso_project image_name="cdtutorial.bin" cue_sheet="cdtutorial.cue">
+	<track type="data">
+		<identifiers
+			system = "PLAYSTATION"
+			application = "PLAYSTATION"
+			volume = "CDTUTORIAL"
+			volume_set = "CDTUTORIAL"
+			publisher = "ME"
+			copyright = "COPYLEFT"
+		/>
+		<!-- The following element defines the license file to inject -->
+		<!-- into the disc image, which is required on some earlier -->
+		<!-- console revisions that check the license data area, -->
+		<!-- but you still need a modchip to boot CD-Rs on all consoles. -->
+		<!-- MKPSXISO expects the raw .DAT files found in the PsyQ -->
+		<!-- SDK directory in PS\CDGEN\LCNSFILE. This is optional if you -->
+		<!-- intend to run this sample in emulators. -->
+		<!-- choose one, if needed:
+		<license file="LICENSEA.DAT"/>
+		<license file="LICENSEE.DAT"/>
+		<license file="LICENSEJ.DAT"/>
+		-->
+		<license file="LICENSEA.DAT"/>
+
+		<directory_tree>
+			<file name="system.cnf"	type="data"/>
+			<file name="cdread.exe" type="data" source="target/mipsel-sony-psx/release/UsingCdRom.exe"/>
+			<file name="texture.tim" type="data" source="../images/texture64_320x240_shift-NTSC.tim"/>
+			<!-- Append dummy sectors: -->
+			<dummy sectors="1024"/>
+		</directory_tree>
+	</track>
+</iso_project>
