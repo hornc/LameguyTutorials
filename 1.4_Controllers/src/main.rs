@@ -83,7 +83,7 @@ fn main() {
 
     // Main loop
     loop {
-        let mut gp = gamepad.poll_p1();
+        let gp = gamepad.poll_p1();
         if gp.pressed(Button::Right) {
             sx += 1;
         } else if gp.pressed(Button::Left) {

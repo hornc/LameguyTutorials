@@ -75,7 +75,7 @@ fn main() {
     let loaded_tim = fb.load_tim(texture_tim);
     let (h, w) = (64, 64);
     // Location of the sprite
-    let (mut sx, mut sy) = (48, 48);
+    let (sx, sy) = (48, 48);
     // Texture coordinates for the sprite
     //let tex_coords = [(0, 0), (0, 64), (64, 0), (64, 64)].map(|(x, y)| TexCoord { x, y });
     let tex_coords = [(0, 0 + 48), (0, 64 + 48), (64, 0 + 48), (64, 64 + 48)].map(|(x, y)| TexCoord { x, y });
