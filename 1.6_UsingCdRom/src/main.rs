@@ -87,7 +87,7 @@ fn main() {
     let mut vel_y = f16::from_int(0);
     let mut angle = Rad(0);
 
-    let mut gamepad = Gamepad::new();
+    //let mut gamepad = Gamepad::new();
 
     let player_tri = [
         [0, -10, 0],
@@ -97,6 +97,7 @@ fn main() {
 
     // Main loop
     loop {
+        /*
         let gp = gamepad.poll_p1();
         if gp.pressed(Button::Right) {
             angle += ANG;
@@ -113,7 +114,7 @@ fn main() {
             //pos_y += cos(angle) * SPEED;
             vel_x -= sin(angle) / 8;
             vel_y += cos(angle) / 8;
-        }
+        }*/
 
         // Accumulate player coordinates by velocity
         pos_x += vel_x;
