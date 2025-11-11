@@ -17,9 +17,10 @@ use core::arch::asm;
 const DEBOUNCE: u8 = 5;  // Number of VBlank waits (i.e. loops) for button debounce
 
 fn get_timer(t: u32) -> u32 {
+    // t is one of: 0, 1, 2
     let time: u32;
     unsafe {
-        psx_get_timer(0);
+        psx_get_timer(t);
         asm!(
             // Move the value from the v0 (r2) register into the output variable
             "move {0}, $v0",
