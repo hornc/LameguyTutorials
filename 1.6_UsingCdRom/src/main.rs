@@ -59,7 +59,7 @@ fn main() {
     };
 
     let file = File::<CDROM>::open("cdrom:\\texture.tim").expect("Could not find texture.tim");
-    const TEX_SIZE: usize = 2048 * 3;
+    const TEX_SIZE: usize = 2048 * 2;
     let load_addr = 524288 + KSEG0 + BIOS_LEN - 2048;
 
     // Create a mutable reference to the memory where the texture will be loaded
@@ -141,13 +141,9 @@ fn main() {
             angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            //pos_x += sin(angle) * SPEED;
-            //pos_y -= cos(angle) * SPEED;
             vel_x += sin(angle) / 8;
             vel_y -= cos(angle) / 8;
         } else if gp.pressed(Button::Down) {
-            //pos_x -= sin(angle) * SPEED;
-            //pos_y += cos(angle) * SPEED;
             vel_x -= sin(angle) / 8;
             vel_y += cos(angle) / 8;
         }
