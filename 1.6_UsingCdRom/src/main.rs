@@ -1,28 +1,29 @@
 #![no_std]
 #![no_main]
 
+use core::{slice, mem};
 use psx::constants::*;
-use psx::include_tim;
 use psx::gpu::primitives::{PolyF3, PolyFT4};
-use psx::gpu::{Color, link_list, Packet, TexCoord, Vertex, VideoMode};
+use psx::gpu::{Clut, Color, link_list, Packet, TexCoord, TexPage, Vertex, VideoMode};
 use psx::hw::gpu::GP0Command;
-use psx::{dma, dprintln, Framebuffer};
+use psx::{dma, dprintln, Framebuffer, LoadedTIM};
+use psx::sys::fs::{File, CDROM};
 use psx::sys::gamepad::{Gamepad, Button};
 use psx::math::{f16, rotate_z, Rad, sin, cos};
 
 // Following the GCC based PsyQ SDK / PSn00bSDK tutorial at:
-// http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html
-// Builds on the Controllers example ....
+// https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html
+// Builds on the Fixed Point Maths example ....
 
 
 const NTSC: bool = true;  // toggle between NTSC and PAL modes and texture
 
 const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
-//const SPEED: i8 = 2;      // Movement speed multiplier
 const W: i16 = 320;
 const H: i16 = 240;
 const X_WRAP: i8 = 107;
 const Y_WRAP: i8 = 80;
+const U32_SIZE: usize = mem::size_of::<u32>();
 
 
 #[repr(C)]
@@ -35,6 +36,7 @@ pub trait SafeUnionAccess {
     fn as_tri(&mut self) -> &mut PolyF3;
     fn as_text(&mut self) -> &mut PolyFT4;
 }
+
 impl SafeUnionAccess for Packet<PolyF> { // taken from ayrtonm/psx-sdk-rs/tree/main/examples/monkey/src/main.rs
     fn as_tri(&mut self) -> &mut PolyF3 {
         unsafe { self.resize::<PolyF3>().contents.tri.reset_cmd() }
@@ -56,11 +58,14 @@ fn main() {
         Framebuffer::new((0, 0), (0, 256), (W, 256), VideoMode::PAL, Some(INDIGO)).unwrap()
     };
 
-    let texture_tim = if NTSC {
-        include_tim!("../../images/texture64_320x240_shift-NTSC.tim")  // shifted to not overwrite psx-sdk-rs font.tim
-    } else {
-        include_tim!("../../images/texture64_320x256-PAL.tim")
-    };
+    let file = File::<CDROM>::open("cdrom:\\texture.tim").expect("Could not find texture.tim");
+    const TEX_SIZE: usize = 2048 * 2;
+    let load_addr = 524288 + KSEG0 + BIOS_LEN - 2048;
+
+    // Create a mutable reference to the memory where the texture will be loaded
+    let dst = unsafe { core::slice::from_raw_parts_mut(load_addr as *mut u8, TEX_SIZE) };
+
+    file.read(dst).expect("Could not read texture file");
 
     let mut txt = fb.load_default_font().new_text_box((0, 8), (W, H));
     let mut gpu_dma = dma::GPU::new();
@@ -72,7 +77,41 @@ fn main() {
     link_list(&mut ot[0..8]);
     link_list(&mut ot[8..16]);
 
-    let loaded_tim = fb.load_tim(texture_tim);
+    // We need to set loaded_tim to be a LoadedTIM,
+    // but have to create it ourselves,
+    // after loading the TIM to VRAM...
+    // Load to VRAM using gpu commands:
+    struct CopyToVRAM<'a>(&'a [u32]);
+
+    impl GP0Command for CopyToVRAM<'_> {
+        fn data(&self) -> &[u32] {
+            self.0
+        }
+    }
+    let send_image = (0xA0u32 << 24).to_le_bytes();  // Send Image to VRAM GPU command
+    dst[8..12].copy_from_slice(&send_image);
+    dst[0x34..0x38].copy_from_slice(&send_image);
+    let ptr = dst.as_ptr();
+    let clut: &[u32];
+    let bmp: &[u32];
+    unsafe {
+        let clut_ptr = ptr.add(8) as *const u32;
+        let bmp_ptr = ptr.add(8 + 44) as *const u32;
+        clut = slice::from_raw_parts(clut_ptr, 44 / U32_SIZE);
+        bmp = slice::from_raw_parts(bmp_ptr, 2060 / U32_SIZE);
+    }
+    fb.draw_sync();
+    fb.gp0.send_command(&CopyToVRAM(bmp));
+    fb.draw_sync();
+    fb.gp0.send_command(&CopyToVRAM(clut));
+
+    let loaded_tim = LoadedTIM {
+            //tex_page: The bitmap's offset in VRAM. 640,48
+            // hardcoded tex_page and CLUT:
+            tex_page: TexPage::const_try_from(Vertex(640 / 64, 48 / 256)).unwrap(),
+            clut: Some(Clut::const_try_from(Vertex(16 / 16, 480)).unwrap()),
+    };
+
     let (h, w) = (64, 64);
     // Location of the sprite
     let (sx, sy) = (48, 48);
@@ -102,13 +141,9 @@ fn main() {
             angle -= ANG;
         }
         if gp.pressed(Button::Up) {
-            //pos_x += sin(angle) * SPEED;
-            //pos_y -= cos(angle) * SPEED;
             vel_x += sin(angle) / 8;
             vel_y -= cos(angle) / 8;
         } else if gp.pressed(Button::Down) {
-            //pos_x -= sin(angle) * SPEED;
-            //pos_y += cos(angle) * SPEED;
             vel_x -= sin(angle) / 8;
             vel_y += cos(angle) / 8;
         }

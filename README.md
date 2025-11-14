@@ -14,7 +14,7 @@ I am now linking to the archived pages at the [Internet Archive's Wayback Machin
 * [1.3](https://web.archive.org/web/20240916202224/http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html) Textures, TPages and CLUTs [Textures](./1.3_Textures/)
 * [1.4](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html) Initializing / Parsing Controller Data [Controllers](./1.4_Controllers/)
 * [1.5](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html) Rotating and moving polys using [Fixed Point Math](./1.5_FixedPointMath)
-* [1.6](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html) Using the CD-ROM
+* [1.6](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html) Loading a TIM from CDROM filesystem; controller and CDROM DMA [Using the CD-ROM](./1.6_UsingCdRom)
 
 ## To run the examples:
 1. Install the latest cargo-psx from [psk-sdk-rs](https://github.com/ayrtonm/psx-sdk-rs), ideally from source, following the simple instructions in the README. (`cd cargo-psx; cargo install --path .`)
