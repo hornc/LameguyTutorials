@@ -10,11 +10,16 @@ In the 4 to 6 months since I started this learning / conversion project (mid-202
 I am now linking to the archived pages at the [Internet Archive's Wayback Machine](https://web.archive.org/).
 
 * [1.1](https://web.archive.org/web/20240822185308/http://lameguy64.net/tutorials/pstutorials/chapter1/1-display.html) Setting up Graphics and [Hello World](./1.1_HelloWorld/)
-* [1.2](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/2-graphics.html) Drawing Graphics Primitives [Yellow Square](./1.2_YellowSquare/)
-* [1.3](https://web.archive.org/web/20240916202224/http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html) Textures, TPages and CLUTs [Textures](./1.3_Textures/)
-* [1.4](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html) Initializing / Parsing Controller Data [Controllers](./1.4_Controllers/)
+* [1.2](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/2-graphics.html) Drawing Graphics Primitives; [Yellow Square](./1.2_YellowSquare/)
+* [1.3](https://web.archive.org/web/20240916202224/http://lameguy64.net/tutorials/pstutorials/chapter1/3-textures.html) Textures, TPages and CLUTs; [Textures](./1.3_Textures/)
+* [1.4](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/4-controllers.html) Initializing / Parsing Controller Data; [Controllers](./1.4_Controllers/)
 * [1.5](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/5-fixedpoint.html) Rotating and moving polys using [Fixed Point Math](./1.5_FixedPointMath)
-* [1.6](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html) Loading a TIM from CDROM filesystem; controller and CDROM DMA [Using the CD-ROM](./1.6_UsingCdRom)
+* [1.6](https://web.archive.org/web/20240916202225/http://lameguy64.net/tutorials/pstutorials/chapter1/6-cdreading.html) Loading a TIM from CDROM filesystem; controller and CDROM DMA; [Using the CD-ROM](./1.6_UsingCdRom)
+
+### Other Rust sdk examples (Bonus!)
+* A.1 [Random Number Generation](./A.1_RandomNumbers): using system timer and user interaction to generate a seed
+
+These bonus examples are written by me and don't come with a step-by-step tutorial, I'll try to document them, but they should demonstrate a simple isolated PSX concept or how-to that I've tried to figure out on my own, and recorded here for future reference.
 
 ## To run the examples:
 1. Install the latest cargo-psx from [psk-sdk-rs](https://github.com/ayrtonm/psx-sdk-rs), ideally from source, following the simple instructions in the README. (`cd cargo-psx; cargo install --path .`)
