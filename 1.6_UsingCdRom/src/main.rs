@@ -19,7 +19,6 @@ use psx::math::{f16, rotate_z, Rad, sin, cos};
 const NTSC: bool = true;  // toggle between NTSC and PAL modes and texture
 
 const ANG: Rad = Rad(512);  // Angle in radians to rotate by each keypress
-//const SPEED: i8 = 2;      // Movement speed multiplier
 const W: i16 = 320;
 const H: i16 = 240;
 const X_WRAP: i8 = 107;
@@ -116,8 +115,6 @@ fn main() {
     let (h, w) = (64, 64);
     // Location of the sprite
     let (sx, sy) = (48, 48);
-    // Texture coordinates for the sprite
-    //let tex_coords = [(0, 0), (0, 64), (64, 0), (64, 64)].map(|(x, y)| TexCoord { x, y });
     let tex_coords = [(0, 0 + 48), (0, 64 + 48), (64, 0 + 48), (64, 64 + 48)].map(|(x, y)| TexCoord { x, y });
 
     // Location of the player 
