@@ -5,3 +5,9 @@ edition = "2021"
 
 [dependencies]
 psx = { git = "https://github.com/ayrtonm/psx-sdk-rs.git" }
+
+[features]
+default = ["bpp4"]
+bpp4 = []
+bpp8 = []
+bpp15 = []

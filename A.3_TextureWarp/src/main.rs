@@ -43,7 +43,14 @@ impl GP0Command for PolyF {}
 #[no_mangle]
 fn main() {
     let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(Color::new(70,70,70))).unwrap();
+
+    #[cfg(feature = "bpp4")]
     let texture_tim = include_tim!("../crate4bit.tim");
+    #[cfg(feature = "bpp8")]
+    let texture_tim = include_tim!("../crate8bit.tim");
+    #[cfg(feature = "bpp15")]
+    compile_error!("bpp15 feature not yet implemented: sample bpp15 texture needed!");
+
     let bpp = texture_tim.bpp;
     let clt = texture_tim.clut.size;
     let offset = texture_tim.bmp.offset;
