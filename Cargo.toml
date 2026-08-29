@@ -9,7 +9,7 @@ members = [
 #  "1.7_Primdraw3D",
   "A.1_RandomNumbers",
 #  "A.2_Sound",
-#  "A.3_TextureWarp",
+  "A.3_TextureWarp",
 #  "A.4_3D_Scene",
 ]
 resolver = "2"
