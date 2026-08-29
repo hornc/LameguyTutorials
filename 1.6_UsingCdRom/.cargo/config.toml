@@ -1,0 +1,5 @@
+[build]
+# Kept local to this example (rather than workspace-shared target/)
+# because mkpsxiso.xml hardcodes a relative path to the
+# compiled output for CD image packaging.
+target-dir = "target"
