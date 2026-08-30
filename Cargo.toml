@@ -6,7 +6,7 @@ members = [
   "1.4_Controllers",
   "1.5_FixedPointMath",
   "1.6_UsingCdRom",
-#  "1.7_Primdraw3D",
+  "1.7_Primdraw3D",
   "A.1_RandomNumbers",
 #  "A.2_Sound",
 #  "A.3_TextureWarp",
