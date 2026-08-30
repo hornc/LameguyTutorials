@@ -44,12 +44,16 @@ impl GP0Command for PolyF {}
 fn main() {
     let mut fb = Framebuffer::new((0, 0), (0, 240), (320, 240), VideoMode::NTSC, Some(Color::new(70,70,70))).unwrap();
 
+    // --- Select exactly one texture bit-depth feature ---
     #[cfg(feature = "bpp4")]
     let texture_tim = include_tim!("../crate4bit.tim");
     #[cfg(feature = "bpp8")]
     let texture_tim = include_tim!("../crate8bit.tim");
     #[cfg(feature = "bpp15")]
-    compile_error!("bpp15 feature not yet implemented: sample bpp15 texture needed!");
+    // Note: stored as 16bpp on disk: 5-5-5 RGB + 1 STP (special transparency processing) bit
+    // The GPU's texture-page colour-depth *setting* for this mode is "15bit"
+    let texture_tim = include_tim!("../crate16bit.tim");
+    // ----------------------------------------------------
 
     let bpp = texture_tim.bpp;
     let clt = texture_tim.clut.size;
