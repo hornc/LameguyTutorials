@@ -1,0 +1,14 @@
+[package]
+name = "TextureWarp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+psx = { git = "https://github.com/ayrtonm/psx-sdk-rs.git" }
+
+[features]
+default = ["bpp4"]
+bpp4 = []
+bpp8 = []
+bpp15 = []
+bpp24 = []
