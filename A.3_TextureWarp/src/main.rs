@@ -53,6 +53,8 @@ fn main() {
     // Note: stored as 16bpp on disk: 5-5-5 RGB + 1 STP (special transparency processing) bit
     // The GPU's texture-page colour-depth *setting* for this mode is "15bit"
     let texture_tim = include_tim!("../crate16bit.tim");
+    #[cfg(feature = "bpp24")]
+    let texture_tim = include_tim!("../crate24bit.tim");
     // ----------------------------------------------------
 
     let bpp = texture_tim.bpp;
